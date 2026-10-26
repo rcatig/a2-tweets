@@ -26,6 +26,10 @@ class Tweet {
         return this.text.includes(" - ");
     }
 
+    get strip():string{
+        return this.text.replace(/https?:\/\/\S+/g, "").replace(/#runkeeper/gi, "").trim()
+    }
+
     get writtenText():string {
         if (this.source != "completed_event") {
             return "";
@@ -35,26 +39,48 @@ class Tweet {
         }
         //TODO: parse the written text from the tweet
         else {
-            const stripped_text = this.text.replace(/https?:\/\/\S+/g, "").replace(/#runkeeper/gi, "")
-            return stripped_text.slice(stripped_text.indexOf(" - ") + 3).trim();
+            const stripped_text = this.strip
+            return stripped_text.slice(stripped_text.indexOf(" - ") + 3);
         }
-       
     }
 
     get activityType():string {
         if (this.source != 'completed_event') {
             return "unknown";
         }
+        else {
+            const substr = this.strip.split(" ");
+            if (substr.includes("km") || substr.includes("mi")) {
+                return substr[5].toLowerCase();
+            }
+            else {
+                return substr[3].toLowerCase();
+            }
+        }
         //TODO: parse the activity type from the text of the tweet
-        return "";
     }
 
     get distance():number {
         if(this.source != 'completed_event') {
             return 0;
         }
+        else {
+            const substr = this.strip.split(" ");
+            const value = Number(substr[3])
+            if (isNaN(value)) {
+                return 0;
+            }
+            else if (substr.includes("km")) {
+                return value / 1.609
+            }
+            else if (substr.includes("mi")) {
+                return value
+            }
+            else {
+                return 0;
+            }
+        }
         //TODO: prase the distance from the text of the tweet
-        return 0;
     }
 
     getHTMLTableRow(rowNumber:number):string {

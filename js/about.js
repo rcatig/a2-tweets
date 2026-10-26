@@ -59,6 +59,17 @@ function parseTweets(runkeeper_tweets) {
 	const written_pct = math.format((written_num / completed_num) * 100, { notation: 'fixed', precision: 2 }) + '%';
 	document.querySelector(".writtenPct").textContent = written_pct;
 
+	// console.log(completed.slice(0,50))
+	// const test = "Just completed a 4.87 km run with @Runkeeper."
+	// const sliced = test.split(" ")
+	// console.log(sliced)
+	// const distance = Number(sliced[3]) / 1.609
+	// console.log(distance)
+
+	// const t = completed.map(x => x.distance)
+	// console.log(t.slice(0,200))
+
+
 	//This line modifies the DOM, searching for the tag with the numberTweets ID and updating the text.
 	//It works correctly, your task is to update the text of the other tags in the HTML file!
 	document.getElementById('numberTweets').innerText = tweet_array.length;	
