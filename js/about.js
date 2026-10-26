@@ -9,66 +9,52 @@ function parseTweets(runkeeper_tweets) {
 		return new Tweet(tweet.text, tweet.created_at);
 	});
 
+	// Find first and last tweet dates.
 	const times = tweet_array.map(t => t.time);
 	const first_date = times.reduce((first, current) => {
 		return Date.parse(current) < Date.parse(first) ? current:first});
 	const last_date = times.reduce((last, current) => {
 		return Date.parse(current) > Date.parse(last) ? current:last});
-	
-	const options = {
-		weekday: "long",
-		year: "numeric",
-		month: "long",
-		day: "numeric"
-	};
+	const options = {weekday: "long",year: "numeric",month: "long",day: "numeric"};
 	const form_first_date = first_date.toLocaleDateString("en-US", options);
 	const form_last_date = last_date.toLocaleDateString("en-US", options);
 	document.querySelector("#firstDate").textContent = form_first_date;
 	document.querySelector("#lastDate").textContent = form_last_date;
 
+	//Find number of tweets.
 	const tweet_num = tweet_array.length;
 	document.querySelector("#numberTweets").textContent = tweet_num;
 
+	//Completed event calculation.
 	const completed = tweet_array.filter(t => t.source === "completed_event");
 	const completed_num = completed.length;
 	document.querySelectorAll(".completedEvents").forEach(t => {t.textContent = completed_num});
-
-	const completed_pct = math.format((completed_num / tweet_num) * 100, { notation: 'fixed', precision: 2 }) + '%';
+	const completed_pct = math.format((completed_num / tweet_num) * 100, { notation: 'fixed', precision: 2 }) + '%'; //calculate percentage to 2 decimal points
 	document.querySelector(".completedEventsPct").textContent = completed_pct;
 
+	//Live event calculation.
 	const live_num = tweet_array.filter(t => t.source === "live_event").length;
 	document.querySelector(".liveEvents").textContent = live_num;
-
 	const live_pct = math.format((live_num / tweet_num) * 100, { notation: 'fixed', precision: 2 }) + '%';
 	document.querySelector(".liveEventsPct").textContent = live_pct;
 
+	// Achievement calculation.
 	const achieve_num = tweet_array.filter(t => t.source === "achievement").length;
 	document.querySelector(".achievements").textContent = achieve_num;
-
 	const achieve_pct = math.format((achieve_num / tweet_num) * 100, { notation: 'fixed', precision: 2 }) + '%';
 	document.querySelector(".achievementsPct").textContent = achieve_pct;
 
+	//Micellaneous calculation.
 	const miscell_num = tweet_array.filter(t => t.source === "miscellaneous").length;
 	document.querySelector(".miscellaneous").textContent = miscell_num;
-
 	const miscell_pct = math.format((miscell_num / tweet_num) * 100, { notation: 'fixed', precision: 2 }) + '%';
 	document.querySelector(".miscellaneousPct").textContent = miscell_pct;
 
+	// User written tweets calculation.
 	const written_num = completed.filter(t => t.written).length;
 	document.querySelector(".written").textContent = written_num;
 	const written_pct = math.format((written_num / completed_num) * 100, { notation: 'fixed', precision: 2 }) + '%';
 	document.querySelector(".writtenPct").textContent = written_pct;
-
-	// console.log(completed.slice(0,50))
-	// const test = "Just completed a 4.87 km run with @Runkeeper."
-	// const sliced = test.split(" ")
-	// console.log(sliced)
-	// const distance = Number(sliced[3]) / 1.609
-	// console.log(distance)
-
-	// const t = completed.map(x => x.distance)
-	// console.log(t.slice(0,200))
-
 
 	//This line modifies the DOM, searching for the tag with the numberTweets ID and updating the text.
 	//It works correctly, your task is to update the text of the other tags in the HTML file!

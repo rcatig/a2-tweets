@@ -9,7 +9,6 @@ class Tweet {
 
 	//returns either 'live_event', 'achievement', 'completed_event', or 'miscellaneous'
     get source():string {
-        //TODO: identify whether the source is a live event, an achievement, a completed event, or miscellaneous.
         const t = this.text.toLowerCase();
         if (t.startsWith("just posted") || t.startsWith("just completed"))
             return "completed_event";
@@ -37,7 +36,6 @@ class Tweet {
         else if(!this.written) {
             return "";
         }
-        //TODO: parse the written text from the tweet
         else {
             const stripped_text = this.strip
             return stripped_text.slice(stripped_text.indexOf(" - ") + 3);
@@ -57,7 +55,6 @@ class Tweet {
                 return substr[3].toLowerCase();
             }
         }
-        //TODO: parse the activity type from the text of the tweet
     }
 
     get distance():number {
@@ -85,6 +82,12 @@ class Tweet {
 
     getHTMLTableRow(rowNumber:number):string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        return "<tr></tr>";
+        let url = ""
+        const match = this.text.match(/https?:\/\/\S+/)
+        if (match) {
+            url = `<a href="${match[0]}" target="_blank">${match[0]}</a>`
+            console.log(url)
+        }
+        return `<tr><td>${rowNumber}</td><td>${this.activityType}</td><td>${this.writtenText} ${url}</td></tr>`;
     }
 }
